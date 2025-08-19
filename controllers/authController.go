@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -9,6 +10,8 @@ import (
 	"github.com/sirakytk/api-with-go/models"
 	"golang.org/x/crypto/bcrypt"
 )
+
+var SecretKey = os.Getenv("JWT_SECRET")
 
 func Register(c *fiber.Ctx) error {
 	var data map[string]string
@@ -63,7 +66,7 @@ func Login(c *fiber.Ctx) error {
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 	})
 
-	token, err := claim.SignedString([]byte("secret"))
+	token, err := claim.SignedString([]byte(SecretKey))
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 
