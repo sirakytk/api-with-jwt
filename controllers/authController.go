@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirakytk/api-with-go/databases"
 	"github.com/sirakytk/api-with-go/models"
@@ -53,6 +56,25 @@ func Login(c *fiber.Ctx) error {
 			"message": "user tidak ditemukan",
 		})
 	}
+
+	claim := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":    user.ID,
+		"email": user.Email,
+		"exp":   time.Now().Add(time.Hour * 24).Unix(),
+	})
+
+	token, err := claim.SignedString([]byte("secret"))
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+
+	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "jwt",
+		Value:    token,
+		Expires:  time.Now().Add(time.Hour * 24),
+		HTTPOnly: true,
+	})
 
 	return c.JSON(fiber.Map{
 		"message": "Login berhasil",
