@@ -19,6 +19,7 @@ func main() {
 
 	// Set routes
 	routes.Routes(app)
+	routes.ProductRoutes(app)
 
 	app.Listen(":8000")
 }
