@@ -15,3 +15,11 @@ func Routes(app *fiber.App) {
 	app.Get("/register", controllers.RegisterPage)
 	app.Get("/home", controllers.HomePage)
 }
+
+func ProductRoutes(app *fiber.App) {
+	app.Get("/api/produk", controllers.GetAllProduct)
+	app.Get("/api/produk/:id", controllers.GetProductByID)
+	app.Post("/api/produk", controllers.CreateProduct)
+	app.Put("/api/produk/:id", controllers.UpdateProduct)
+	app.Delete("/api/produk/:id", controllers.DeleteProduct)
+}
